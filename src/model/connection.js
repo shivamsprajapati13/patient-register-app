@@ -6,7 +6,7 @@ let dbReady = false;
 
 export async function initDb() {
   if (!db) {
-    db = await PGlite.create();
+     db = new PGlite();
   }
 
   if (!dbReady) {
