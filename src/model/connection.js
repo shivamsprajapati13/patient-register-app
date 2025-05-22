@@ -6,7 +6,7 @@ let dbReady = false;
 
 export async function initDb() {
   if (!db) {
-     db = new PGlite();
+     db = new PGlite('idb://my-pgdata')
   }
 
   if (!dbReady) {
