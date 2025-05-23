@@ -22,22 +22,21 @@ function App() {
     };
     fetchData();
   }, []);
+const handleAddPatient = async (patient) => {
+  await addPatient(patient);
+  const updatedPatients = await getAllPatients();
+  setPatients(updatedPatients);
+  setFilteredPatients(updatedPatients);
+};
 
-  const handleAddPatient = async (patient) => {
-    await addPatient(patient);
-    const updatedPatients = await getAllPatients();
-    setPatients(updatedPatients);
-    setFilteredPatients(updatedPatients);
-  };
-
-  const handleSearch = async (searchTerm) => {
-    if (!searchTerm) {
-      setFilteredPatients(patients);
-    } else {
-      const results = await searchPatient(searchTerm);
-      setFilteredPatients(results);
-    }
-  };
+const handleSearch = async (searchTerm) => {
+  if (!searchTerm) {
+    setFilteredPatients(patients);  
+  } else {
+    const results = await searchPatient(searchTerm);
+    setFilteredPatients(results);  
+  }
+};
 
   return (
     <div style={{ padding: '2rem' }}>

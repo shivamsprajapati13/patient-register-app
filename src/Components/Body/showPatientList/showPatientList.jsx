@@ -18,9 +18,9 @@ function PatientList({ patients }) {
   };
 
  
-  const formatDate = (timestamp) => {
+ const formatDate = (timestamp) => {
     const date = new Date(timestamp);
-    return date.toLocaleString();  
+    return date.toLocaleString();  // This formats it according to the user's locale
   };
 
   return (

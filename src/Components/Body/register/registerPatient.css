@@ -1,7 +1,7 @@
 /* Main form container */
 .patient-form {
-  width: 100%; /* Ensure form takes up full screen width */
-  height: 100vh; /* Take full viewport height */
+  width: 100%; /* Make the form take full width */
+  height: 100vh; /* Make the form take the full viewport height */
   padding: 2rem;
   background-color: #fff;
   border-radius: 8px;
@@ -10,7 +10,7 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  justify-content: center; /* Vertically center the content */
+  justify-content: center; /* Center the form content vertically */
 }
 
 /* Form Title */
@@ -21,7 +21,7 @@
   margin-bottom: 20px;
 }
 
-/* Input Group styling */
+/* Input Group */
 .input-group {
   margin-bottom: 15px;
 }
@@ -30,11 +30,11 @@
   font-size: 16px;
   color: #555;
   font-weight: 600;
-  display: block; /* Ensure the label is on top of the input */
+  display: block; /* Ensure the label is above the input */
 }
 
 .input-group input {
-  width: 100%; /* Input fields take up the full width */
+  width: 100%;
   padding: 12px;
   margin-top: 8px;
   font-size: 16px;
@@ -45,11 +45,10 @@
 }
 
 .input-group input:focus {
-  border-color: #007bff; /* Blue border on focus */
+  border-color: #007bff; /* Change border color on focus */
   outline: none;
 }
 
-/* Submit Button Styling */
 button.submit-btn {
   padding: 12px;
   background-color: #007bff;
@@ -66,21 +65,28 @@ button.submit-btn:hover {
   background-color: #0056b3; /* Darker blue on hover */
 }
 
-/* Responsive Design */
+input[type="text"],
+input[type="date"] {
+  font-size: 16px;
+  padding: 12px;
+  width: 100%;
+}
+
+/* Responsive design for smaller screens */
 @media (max-width: 768px) {
   .patient-form {
-    padding: 1rem; /* Adjust padding for smaller screens */
+    padding: 1rem; /* Adjust padding on smaller screens */
   }
 
   .form-title {
-    font-size: 20px;
+    font-size: 20px; /* Smaller title on mobile */
   }
 
   .input-group input {
-    font-size: 14px;
+    font-size: 14px; /* Slightly smaller input text */
   }
 
   button.submit-btn {
-    font-size: 14px;
+    font-size: 14px; /* Adjust button font size */
   }
 }

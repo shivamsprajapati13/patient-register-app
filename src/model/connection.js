@@ -1,4 +1,3 @@
-
 import { PGlite } from '@electric-sql/pglite';
 
 let db;
@@ -6,21 +5,21 @@ let dbReady = false;
 
 export async function initDb() {
   if (!db) {
-     db = new PGlite('idb://my-pgdata')
+    db = new PGlite('idb://my-pgdata');
   }
 
   if (!dbReady) {
-  await db.exec(`
-        CREATE TABLE IF NOT EXISTS patients (
-         id SERIAL PRIMARY KEY,
-          first_name TEXT NOT NULL,
-          last_name TEXT NOT NULL,
-          contact_no TEXT,
-          dob TEXT,
-          disease TEXT,
+    await db.exec(`
+      CREATE TABLE IF NOT EXISTS patients (
+        id SERIAL PRIMARY KEY,
+        first_name TEXT NOT NULL,
+        last_name TEXT NOT NULL,
+        contact_no TEXT,
+        dob TEXT,
+        disease TEXT,
         timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        );
-      `);
+      );
+    `);
     dbReady = true;
   }
 
@@ -30,7 +29,7 @@ export async function initDb() {
 export async function addPatient({ first_name, last_name, contact_no, dob, disease }) {
   try {
     const dbInstance = await initDb();
-
+    
     await dbInstance.query(
       'INSERT INTO patients (first_name, last_name, contact_no, dob, disease) VALUES ($1, $2, $3, $4, $5);',
       [first_name, last_name, contact_no, dob, disease]
@@ -49,25 +48,28 @@ export async function getAllPatients() {
 
 export async function searchPatient(patientSearch) {
   try {
- 
-    const searchQuery = `%${patientSearch}%`;  
+    const dbInstance = await initDb();
 
-    console.log("Query: SELECT * FROM PATIENTS WHERE disease LIKE ?");
+    if (!patientSearch) {
+      return [];  // Return an empty array if no search term
+    }
 
+    // Add wildcards for LIKE query
+    const searchQuery = `%${patientSearch}%`;
+
+    console.log("Search Query: SELECT * FROM patients WHERE first_name LIKE $1 OR last_name LIKE $1 OR disease LIKE $1");
     console.log("Parameter:", searchQuery);
-    
-    const result = await db.query(
-        'SELECT * FROM PATIENTS WHERE first_name LIKE $1',
-        [`%${searchQuery}%`]
-      );
-      
 
-    console.log('Query Result:', result);
+    // Searching in first_name, last_name, and disease columns
+    const result = await dbInstance.query(
+      'SELECT * FROM patients WHERE first_name LIKE $1 OR last_name LIKE $1 OR disease LIKE $1',
+      [searchQuery]
+    );
 
-    return result.rows; 
+    console.log('Search Query Result:', result);
+    return result.rows;
   } catch (error) {
     console.error('Error searching for patient:', error);
-    return [];  
+    return [];  // Return an empty array on error
   }
 }
-
