@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './registerPatient.css'; // External CSS for styling
 
 function PatientForm({ onAdd, onSearch }) {
   const [formData, setFormData] = useState({
@@ -7,7 +8,8 @@ function PatientForm({ onAdd, onSearch }) {
     contact_no: '',
     dob: '',
     disease: '',
-    patientSearch: '',  
+    patientSearch: '',
+  
   });
 
   const handleChange = (e) => {
@@ -19,15 +21,19 @@ function PatientForm({ onAdd, onSearch }) {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    onAdd(formData);  
+    const timestamp = new Date().toISOString();
+
+    // Add timestamp to formData
+    const dataWithTimestamp = { ...formData, timestamp };
+    onAdd(dataWithTimestamp);  
     setFormData({
       first_name: '',
       last_name: '',
       contact_no: '',
       dob: '',
       disease: '',
-      patientSearch: '',  
+      patientSearch: '',
+
     });
   };
 
@@ -37,13 +43,13 @@ function PatientForm({ onAdd, onSearch }) {
       ...prev,
       patientSearch: value,
     }));
-    onSearch(value);  
+    onSearch(value); 
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-
-      <div>
+    <form className="patient-form" onSubmit={handleSubmit}>
+      <h2 className="form-title">Patient Registration</h2>
+      <div className="input-group">
         <label>First Name:</label>
         <input
           type="text"
@@ -53,7 +59,7 @@ function PatientForm({ onAdd, onSearch }) {
           required
         />
       </div>
-      <div>
+      <div className="input-group">
         <label>Last Name:</label>
         <input
           type="text"
@@ -63,7 +69,7 @@ function PatientForm({ onAdd, onSearch }) {
           required
         />
       </div>
-      <div>
+      <div className="input-group">
         <label>Contact No:</label>
         <input
           type="text"
@@ -73,7 +79,7 @@ function PatientForm({ onAdd, onSearch }) {
           required
         />
       </div>
-      <div>
+      <div className="input-group">
         <label>Date of Birth:</label>
         <input
           type="date"
@@ -83,7 +89,7 @@ function PatientForm({ onAdd, onSearch }) {
           required
         />
       </div>
-      <div>
+      <div className="input-group">
         <label>Disease:</label>
         <input
           type="text"
@@ -93,18 +99,9 @@ function PatientForm({ onAdd, onSearch }) {
           required
         />
       </div>
-      <button type="submit">Add Patient</button>
+      <button className="submit-btn" type="submit">Add Patient</button>
 
- 
-      <div>
-        <label>Search by Disease:</label>
-        <input
-          type="text"
-          name="patientSearch"
-          value={formData.patientSearch}
-          onChange={handleSearchChange} 
-        />
-      </div>
+   
     </form>
   );
 }
