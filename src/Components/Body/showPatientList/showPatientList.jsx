@@ -1,6 +1,5 @@
 import React from 'react';
-import './showPatientList.css';  // Ensure you create this CSS file
-
+import './showPatientList.css';  
 function PatientList({ patients }) {
   if (!patients || patients.length === 0) return <p className="no-patients">No patients yet.</p>;
 
@@ -18,10 +17,10 @@ function PatientList({ patients }) {
     return age;
   };
 
-  // Function to format timestamp into a readable date
+ 
   const formatDate = (timestamp) => {
     const date = new Date(timestamp);
-    return date.toLocaleString();  // This formats it according to the user's locale
+    return date.toLocaleString();  
   };
 
   return (
@@ -34,7 +33,7 @@ function PatientList({ patients }) {
               <h3 className="patient-name">{p.first_name} {p.last_name}</h3>
               <p className="patient-age">Age: {calculateAge(p.dob)}</p>
               <p className="patient-condition">Condition: {p.disease}</p>
-              <p className="patient-time">Time: {formatDate(p.timestamp)}</p>  {/* Format the timestamp */}
+              <p className="patient-time">Time: {formatDate(p.timestamp)}</p>  
             </div>
           </li>
         ))}

@@ -23,7 +23,7 @@ function PatientForm({ onAdd, onSearch }) {
   const handleSubmit = (e) => {
     const timestamp = new Date().toISOString();
 
-    // Add timestamp to formData
+
     const dataWithTimestamp = { ...formData, timestamp };
     onAdd(dataWithTimestamp);  
     setFormData({

@@ -6,7 +6,7 @@ function SearchForm({ onSearch }) {
   const handleSearchChange = (e) => {
     const { value } = e.target;
     setSearchTerm(value);
-    onSearch(value); // Pass the search term back to the parent
+    onSearch(value); 
   };
 
   return (
