@@ -37,3 +37,29 @@ export async function getAllPatients() {
   const result = await dbInstance.query('SELECT * FROM patients');
   return result.rows;
 }
+
+export async function searchPatient(patientSearch) {
+  try {
+ 
+
+    const searchQuery = `%${patientSearch}%`;  
+
+    console.log("Query: SELECT * FROM PATIENTS WHERE disease LIKE ?");
+
+    console.log("Parameter:", searchQuery);
+    
+    const result = await db.query(
+        'SELECT * FROM PATIENTS WHERE first_name LIKE $1',
+        [`%${searchQuery}%`]
+      );
+      
+
+    console.log('Query Result:', result);
+
+    return result.rows; 
+  } catch (error) {
+    console.error('Error searching for patient:', error);
+    return [];  
+  }
+}
+

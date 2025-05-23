@@ -1,11 +1,13 @@
-// Components/Body/registerPatient.jsx
 import React, { useState } from 'react';
 
-function PatientForm({ onAdd }) {
+function PatientForm({ onAdd, onSearch }) {
   const [formData, setFormData] = useState({
-    name: '',
-    age: '',
-    condition: '',
+    first_name: '',
+    last_name: '',
+    contact_no: '',
+    dob: '',
+    disease: '',
+    patientSearch: '',  
   });
 
   const handleChange = (e) => {
@@ -18,50 +20,91 @@ function PatientForm({ onAdd }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { name, age, condition } = formData;
+    onAdd(formData);  
+    setFormData({
+      first_name: '',
+      last_name: '',
+      contact_no: '',
+      dob: '',
+      disease: '',
+      patientSearch: '',  
+    });
+  };
 
-    onAdd({ name, age: Number(age), condition });
-
-    setFormData({ name: '', age: '', condition: '' });
+  const handleSearchChange = (e) => {
+    const { value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      patientSearch: value,
+    }));
+    onSearch(value);  
   };
 
   return (
-     
     <form onSubmit={handleSubmit}>
-      <div >
-        <label>Name: </label>
-        <input
-          type="text"
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
-          required
-        />
-      </div>
 
       <div>
-        <label>Age: </label>
-        <input
-          type="number"
-          name="age"
-          value={formData.age}
-          onChange={handleChange}
-          required
-        />
-      </div>
-
-      <div>
-        <label>Condition: </label>
+        <label>First Name:</label>
         <input
           type="text"
-          name="condition"
-          value={formData.condition}
+          name="first_name"
+          value={formData.first_name}
           onChange={handleChange}
           required
         />
       </div>
-
+      <div>
+        <label>Last Name:</label>
+        <input
+          type="text"
+          name="last_name"
+          value={formData.last_name}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <div>
+        <label>Contact No:</label>
+        <input
+          type="text"
+          name="contact_no"
+          value={formData.contact_no}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <div>
+        <label>Date of Birth:</label>
+        <input
+          type="date"
+          name="dob"
+          value={formData.dob}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <div>
+        <label>Disease:</label>
+        <input
+          type="text"
+          name="disease"
+          value={formData.disease}
+          onChange={handleChange}
+          required
+        />
+      </div>
       <button type="submit">Add Patient</button>
+
+ 
+      <div>
+        <label>Search by Disease:</label>
+        <input
+          type="text"
+          name="patientSearch"
+          value={formData.patientSearch}
+          onChange={handleSearchChange} 
+        />
+      </div>
     </form>
   );
 }
