@@ -1,5 +1,7 @@
 import React from 'react';
-import './showPatientList.css';  
+import Table from 'react-bootstrap/Table';
+import './showPatientList.css';
+
 function PatientList({ patients }) {
   if (!patients || patients.length === 0) return <p className="no-patients">No patients yet.</p>;
 
@@ -17,27 +19,46 @@ function PatientList({ patients }) {
     return age;
   };
 
- 
- const formatDate = (timestamp) => {
+  const formatDate = (timestamp) => {
     const date = new Date(timestamp);
-    return date.toLocaleString();  // This formats it according to the user's locale
+    return date.toLocaleDateString(); 
   };
 
   return (
     <div className="patient-list-container">
       <h2 className="patient-list-title">Patient List</h2>
-      <ul className="patient-list">
-        {patients.map((p) => (
-          <li key={p.id} className="patient-item">
-            <div className="patient-info">
-              <h3 className="patient-name">{p.first_name} {p.last_name}</h3>
-              <p className="patient-age">Age: {calculateAge(p.dob)}</p>
-              <p className="patient-condition">Condition: {p.disease}</p>
-              <p className="patient-time">Time: {formatDate(p.timestamp)}</p>  
-            </div>
-          </li>
-        ))}
-      </ul>
+
+     
+      <p className="patient-count">Total Patients: {patients.length}</p>
+
+      <Table striped bordered hover responsive>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Email</th>
+            <th>Gender</th>
+            <th>Doctor</th>
+            <th>Contact No</th>
+            <th>Registration Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {patients.map((p) => (
+            <tr key={p.id}>
+              <td>{p.id}</td>
+              <td>{p.first_name}</td>
+              <td>{calculateAge(p.dob)}</td>
+              <td>{p.email}</td>
+              <td>{p.gender}</td>
+              <td>{p.disease}</td>
+              <td>{p.contact_no}</td> 
+              <td>{formatDate(p.timestamp)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
     </div>
   );
 }

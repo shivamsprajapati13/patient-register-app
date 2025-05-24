@@ -1,17 +1,20 @@
-import React, { useState } from 'react';
-import './registerPatient.css'; // External CSS for styling
+import React, { useState } from "react";
+import "./registerPatient.css";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
 
 function PatientForm({ onAdd, onSearch }) {
   const [formData, setFormData] = useState({
     first_name: '',
-    last_name: '',
+    email: '',
+  gender:'',
     contact_no: '',
     dob: '',
     disease: '',
+  
     patientSearch: '',
     timestamp: '',
   });
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,22 +24,20 @@ function PatientForm({ onAdd, onSearch }) {
     }));
   };
 
-  // Handle form submission
+ 
   const handleSubmit = (e) => {
-    e.preventDefault(); // Prevent default form submission behavior
+    e.preventDefault(); 
     
-    // Add timestamp to formData before sending it to parent
     const timestamp = new Date().toISOString();
     const dataWithTimestamp = { ...formData, timestamp };
 
-    // Call onAdd passed from parent
     onAdd(dataWithTimestamp);
 
-    // Reset form after submission
     setFormData({
       first_name: '',
-      last_name: '',
-      contact_no: '',
+      email: '',
+            gender: '', 
+                  contact_no: '',
       dob: '',
       disease: '',
       patientSearch: '',
@@ -44,83 +45,101 @@ function PatientForm({ onAdd, onSearch }) {
     });
   };
 
-  // Handle search input change
   const handleSearchChange = (e) => {
     const { value } = e.target;
     setFormData((prev) => ({
       ...prev,
       patientSearch: value,
     }));
-    onSearch(value); // Perform search in parent component
+    onSearch(value); 
   };
 
   return (
-    <form className="patient-form" onSubmit={handleSubmit}>
-      <h2 className="form-title">Patient Registration</h2>
-
-      {/* First Name */}
-      <div className="input-group">
-        <label>First Name:</label>
-        <input
+    <Form onSubmit={handleSubmit}>
+      <Form.Group className="mb-3 col-6" controlId="formFirstName">
+        <Form.Label>Full Name</Form.Label>
+        <Form.Control
           type="text"
           name="first_name"
           value={formData.first_name}
           onChange={handleChange}
           required
+          placeholder="Enter Full Name"
         />
-      </div>
+      </Form.Group>
 
-      {/* Last Name */}
-      <div className="input-group">
-        <label>Last Name:</label>
-        <input
-          type="text"
-          name="last_name"
-          value={formData.last_name}
+      <Form.Group className="mb-3 col-6" controlId="formEmail">
+        <Form.Label>Email</Form.Label>
+        <Form.Control
+          type="email"
+          name="email"
+          value={formData.email}
           onChange={handleChange}
-          required
+          
+          placeholder="Enter Email"
         />
-      </div>
+      </Form.Group>
 
-      {/* Contact Number */}
-      <div className="input-group">
-        <label>Contact No:</label>
-        <input
+<Form.Group className="mb-3 col-6" controlId="formContactNo">
+        <Form.Label>Contact No</Form.Label>
+        <Form.Control
           type="text"
           name="contact_no"
           value={formData.contact_no}
           onChange={handleChange}
           required
+          placeholder="Enter Contact Number"
         />
-      </div>
+      </Form.Group>
 
-      {/* Date of Birth */}
-      <div className="input-group">
-        <label>Date of Birth:</label>
-        <input
+      <Form.Group className="mb-3 col-6" controlId="formDOB">
+        <Form.Label>Date of Birth</Form.Label>
+        <Form.Control
           type="date"
           name="dob"
           value={formData.dob}
           onChange={handleChange}
           required
         />
-      </div>
+      </Form.Group>
 
-      {/* Disease */}
-      <div className="input-group">
-        <label>Disease:</label>
-        <input
-          type="text"
+      <Form.Group className="mb-3 col-6" controlId="formDoctorName">
+        <Form.Label>Doctor Name</Form.Label>
+        <Form.Control
+          as="select"
           name="disease"
           value={formData.disease}
           onChange={handleChange}
           required
-        />
-      </div>
+        >
+          <option value="">Select Doctor</option>
+          <option value="Dr. Smith">Dr. Smith</option>
+          <option value="Dr. Johnson">Dr. Johnson</option>
+          <option value="Dr. Brown">Dr. Brown</option>
+          <option value="Dr. Williams">Dr. Williams</option>
+        </Form.Control>
+      </Form.Group>
 
-      {/* Submit Button */}
-      <button className="submit-btn" type="submit">Add Patient</button>
-    </form>
+      <Form.Group className="mb-3 col-6" controlId="formGender">
+        <Form.Label>Gender</Form.Label>
+        <Form.Control
+          as="select"
+          name="gender"
+          value={formData.gender}
+          onChange={handleChange}
+          required
+        >
+          <option value="">Select Gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+        </Form.Control>
+      </Form.Group>
+
+      <Button variant="primary" type="submit">
+        Add Patient
+      </Button>
+    </Form>
   );
 }
 

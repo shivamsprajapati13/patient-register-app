@@ -1,50 +1,49 @@
-/* General reset for navbar */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
+/* Navbar container */
 .navbar {
-  background-color: #007bff;
-  padding: 15px 0;
-  position: fixed;  /* Make the navbar fixed at the top */
+  background-color: #333;
+  padding: 10px 20px;
+  position: sticky;
   top: 0;
   width: 100%;
-  z-index: 1000;  /* Ensure it stays on top of other elements */
+  z-index: 1000;
 }
 
+/* Navigation list */
 .navList {
-  display: flex;
-  justify-content: center; /* Center the nav items */
   list-style-type: none;
   margin: 0;
   padding: 0;
+  display: flex;
+  justify-content: center;
 }
 
+/* Individual navigation items */
 .navItem {
-  margin: 0 20px; /* Space between nav items */
+  margin: 0 20px;
 }
 
+/* Navigation links */
 .navLink {
   color: white;
   text-decoration: none;
   font-size: 18px;
-  font-weight: 500;
-  padding: 10px 15px;
-  transition: background-color 0.3s ease;  /* Smooth hover transition */
+  padding: 10px;
+  transition: background-color 0.3s;
 }
 
+/* Hover effect for links */
 .navLink:hover {
-  background-color: #0056b3; /* Darker blue on hover */
-  border-radius: 4px;
+  background-color: #575757;
+  border-radius: 5px;
 }
 
-body {
-  padding-top: 80px;  /* Add padding to avoid content being hidden behind the navbar */
+/* Active link styling (optional) */
+.navLink.active {
+  background-color: #007bff;
+  border-radius: 5px;
 }
 
-/* Responsive Design */
+/* Media query for responsive design */
 @media (max-width: 768px) {
   .navList {
     flex-direction: column;
@@ -52,6 +51,6 @@ body {
   }
 
   .navItem {
-    margin: 10px 0;  /* Adjust spacing for smaller screens */
+    margin: 10px 0;
   }
 }
