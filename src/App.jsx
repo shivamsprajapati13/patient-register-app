@@ -5,7 +5,7 @@ import SearchForm from './Components/Body/searchPatient/search';
 import { initDb, addPatient, getAllPatients, searchPatient } from './model/connection';
 import PatientList from './Components/Body/showPatientList/showPatientList';
 import Navbar from './Components/Navbar/navbar';
-import Loader from './components/Loader/Loader';
+import Loader from './Components/Loader/Loader';
 
 function App() {
   const [patients, setPatients] = useState([]);
