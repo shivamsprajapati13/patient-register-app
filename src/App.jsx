@@ -4,7 +4,7 @@ import PatientForm from './Components/Body/register/registerPatient';
 import SearchForm from './Components/Body/searchPatient/search';
 import { initDb, addPatient, getAllPatients, searchPatient } from './model/connection';
 import PatientList from './Components/Body/showPatientList/showPatientList';
-import Navbar from './Components/Navbar/Navbar';
+import Navbar from './Components/Navbar/navbar';
 import Loader from './Components/Loader/loader';
 
 function App() {
