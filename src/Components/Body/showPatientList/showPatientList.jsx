@@ -28,8 +28,8 @@ function PatientList({ patients, onEdit, onDelete }) {
     <div className="patient-list-container">
       <p className="patient-count">Total Patients: {patients.length}</p>
 
-      <Table striped bordered hover responsive>
-        <thead>
+      <Table striped bordered hover responsive >
+        <thead style={{ position: 'sticky', top: -1 }}>
           <tr>
             <th>#</th>
             <th>Name</th>
@@ -54,21 +54,19 @@ function PatientList({ patients, onEdit, onDelete }) {
               <td>{p.contact_no}</td>
               <td>{formatDate(p.timestamp)}</td>
               <td>
-                <Button
-                  variant="outline-primary"
-                  size="sm"
-                  className="me-2"
-                  onClick={() => onEdit(p)}
-                >
-                  Edit
-                </Button>
-                <Button
-                  variant="outline-danger"
-                  size="sm"
-                  onClick={() => onDelete(p.id)}
-                >
-                  Delete
-                </Button>
+             <Button
+  variant="outline-danger"
+  size="sm"
+  onClick={() => {
+    const confirmDelete = window.confirm(`Are you sure you want to delete ${p.first_name}?`);
+    if (confirmDelete) {
+      onDelete(p.id);
+    }
+  }}
+>
+  Delete
+</Button>
+
               </td>
             </tr>
           ))}

@@ -127,7 +127,8 @@ const handleAddPatient = async (patient) => {
             element={
               <>
                 <SearchForm onSearch={handleSearch} />
-                {loading ? <Loader /> : <PatientList
+                {loading ? <Loader /> : 
+                <PatientList
   key={updateKey}
   patients={filteredPatients}
 
