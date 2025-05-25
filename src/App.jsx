@@ -11,28 +11,33 @@ function App() {
   const [patients, setPatients] = useState([]);
   const [filteredPatients, setFilteredPatients] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [updateKey, setUpdateKey] = useState(Date.now());  // To force re-render
+  const [updateKey, setUpdateKey] = useState(Date.now());
   const patientsRef = useRef([]);
+  const TAB_ID = useRef(Math.random().toString(36).substring(2)).current;
 
-  const fetchPatients = useCallback(async () => {
-    try {
+const fetchPatients = useCallback(async (newPatient = null) => {
+  try {
+    let updatedPatients;
+
+    if (newPatient) {
+      updatedPatients = [...patientsRef.current, newPatient];
+    } else {
       const data = await getAllPatients();
-
-      // Deep clone to ensure React detects change
-      const clonedData = JSON.parse(JSON.stringify(data));
-
-      setPatients(clonedData);
-      setFilteredPatients(clonedData);
-      patientsRef.current = clonedData;
-
-      // Update key to force remount PatientList component
-      setUpdateKey(Date.now());
-
-      console.log('Patient list updated', clonedData);
-    } catch (error) {
-      console.error('Error fetching patients:', error);
+      updatedPatients = JSON.parse(JSON.stringify(data));
     }
-  }, []);
+
+    setPatients(updatedPatients);
+    setFilteredPatients(updatedPatients);
+    patientsRef.current = updatedPatients;
+
+    setUpdateKey(Date.now()); // Force UI update
+    console.log('🔁 Patient list updated', updatedPatients);
+  } catch (error) {
+    console.error('❌ Error fetching patients:', error);
+  }
+}, []);
+
+
 
   useEffect(() => {
     const init = async () => {
@@ -40,33 +45,35 @@ function App() {
       await fetchPatients();
       setLoading(false);
     };
-
     init();
-
-   
   }, [fetchPatients]);
 
+  // Listen to broadcast messages from other tabs
+useEffect(() => {
+  const channel = new BroadcastChannel('patients-updates');
+  channel.onmessage = async (event) => {
+    const { type, sender, patient } = event.data || {};
+    if (sender !== TAB_ID && type === 'patient-added') {
+      console.log('📨 Update received from another tab.');
+      await fetchPatients(patient); // Inject the received patient
+    }
+  };
+  return () => {
+    channel.close();
+  };
+}, [fetchPatients, TAB_ID]);
 
- const channel = new BroadcastChannel('patients-updates');
-    channel.onmessage = async (event) => {
-  if (event.data?.type === 'patient-added') {
-    // alert("helo");
-     console.log('↪ Broadcast received in another tab:');
-    // Wait a bit before fetching to allow IndexedDB to sync
-    await  fetchPatients();
-    console.log("here.................");
-  }
+
+const handleAddPatient = async (patient) => {
+  await addPatient(patient);
+  await fetchPatients(patient); // Pass patient directly
+
+  const channel = new BroadcastChannel('patients-updates');
+  channel.postMessage({ type: 'patient-added', sender: TAB_ID, patient }); // broadcast the patient too
+  channel.close();
+  console.log('📤 Broadcast sent to other tabs.');
 };
 
-  const handleAddPatient = async (patient) => {
-    await addPatient(patient);
-    await fetchPatients();
-
-    const channel = new BroadcastChannel('patients-updates');
-    channel.postMessage({ type: 'patient-added' });
-    channel.close();
-    console.log('✅ Broadcast sent to other tabs.');
-  };
 
   const handleSearch = async (term) => {
     if (!term) {
@@ -85,9 +92,7 @@ function App() {
           <Route
             path="/"
             element={
-              
               <PatientForm patientCount={patients.length} onAdd={handleAddPatient} />
-                
             }
           />
           <Route
@@ -95,8 +100,7 @@ function App() {
             element={
               <>
                 <SearchForm onSearch={handleSearch} />
-           
-                {loading ? <Loader /> : <PatientList patients={filteredPatients} />}
+                {loading ? <Loader /> : <PatientList key={updateKey} patients={filteredPatients} />}
               </>
             }
           />
