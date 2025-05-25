@@ -4,8 +4,6 @@ import { PGlite } from '@electric-sql/pglite';
 let db = null;
 let dbReady = false;
 
-const channel = new BroadcastChannel('patients-updates');
-
 export async function initDb() {
   if (!db) {
     db = new PGlite('idb://my-pgdata');
@@ -39,10 +37,18 @@ export async function addPatient(patient) {
     [first_name, email, gender, contact_no, dob, disease]
   );
 
-channel.postMessage({ type: 'patient-added' });
-console.log("message posted");    
+//  const channel = new BroadcastChannel('patients-updates');
+//   channel.postMessage({ type: 'patient-added' });
+//   channel.close();  
   
 }
+
+export async function UpdatePatientList(patient){
+ await addPatient(patient);
+ console.log("Here in updating");
+ alert("hello");
+}
+
 
 export async function getAllPatients() {
   const db = await initDb();

@@ -1,84 +1,175 @@
-/* Container for the whole patient list section */
 .patient-list-container {
-  padding: 2rem;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  margin-top: 2rem;
+  max-width: 100%;
+  background-color: #fff; /* White background */
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  color: #000; /* Black text */
+  padding: 1.5rem;
+  height: 100vh; /* Full viewport height */
+  display: flex;
+  flex-direction: column;
 }
 
 .patient-list-title {
-  text-align: center;
+  font-weight: 700;
+  font-size: 1.8rem;
+  color: #000;
+  margin-bottom: 0.5rem;
+}
+
+.patient-count {
+  font-size: 1rem;
+  font-weight: 500;
   color: #333;
-  font-size: 24px;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
-/* Style for the list itself */
-.patient-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+.export-buttons button {
+  background: #fff;
+  border: 1.5px solid #000;
+  color: #000;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  padding: 0.3rem 0.9rem;
+  font-size: 0.85rem;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  margin-right: 0.5rem;
 }
 
-.patient-item {
-  background-color: #fff;
-  padding: 15px;
-  margin-bottom: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
+.export-buttons button:hover {
+  background-color: #000;
+  color: #fff;
+  border-color: #000;
 }
 
-.patient-item:hover {
-  background-color: #f1f1f1;
+.patient-list-scroll-wrapper {
+  flex: 1 1 auto; /* take remaining vertical space */
+  max-height: calc(100vh - 180px); /* adjust for header & buttons */
+  overflow-y: auto;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  position: relative;
 }
 
-.patient-info {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+.modern-table {
+  width: 100%;
+  border-collapse: separate !important;
+  border-spacing: 0 8px;
+  font-size: 0.95rem;
+  color: #000;
+  table-layout: fixed; /* distribute columns evenly */
 }
 
-.patient-name {
-  font-size: 20px;
-  font-weight: bold;
-  color: #007bff;
-  margin-bottom: 8px;
+.modern-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: #000; /* Black header background */
+  color: #fff; /* White header text */
+  box-shadow: 0 2px 5px -2px rgba(0, 0, 0, 0.4);
+  padding: 12px 10px;
+  text-transform: uppercase;
+  font-weight: 600;
+  text-align: left;
+  white-space: nowrap;
 }
 
-.patient-age, .patient-condition {
-  font-size: 16px;
+.modern-table tbody tr {
+  background-color: #fff; /* White rows */
+  transition: background-color 0.25s ease;
+  border-radius: 0.375rem;
+  cursor: default;
+}
+
+.modern-table tbody tr:hover {
+  background-color: #e0e0e0 !important; /* Light grey hover */
+  cursor: pointer;
+}
+
+.modern-table tbody tr td {
+  padding: 12px 10px;
+  vertical-align: middle;
+  border-top: none !important;
+  border-bottom: none !important;
+  color: #000;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.modern-table tbody tr:nth-child(odd) {
+  background-color: #f8f8f8; /* Slightly off-white alternating rows */
+}
+
+.modern-table tbody tr td:nth-child(odd) {
+  background-color: #fafafa;
+}
+
+/* No patients message styling */
+.no-patients {
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-align: center;
+  padding: 60px 0;
   color: #555;
 }
 
-/* Message for when there are no patients */
-.no-patients {
-  text-align: center;
-  font-size: 18px;
-  color: #777;
+/* Scrollbar styling */
+.patient-list-scroll-wrapper::-webkit-scrollbar {
+  width: 8px;
 }
 
-/* Responsive Design */
+.patient-list-scroll-wrapper::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 4px;
+}
+
+.patient-list-scroll-wrapper::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+}
+
+/* Responsive tweaks */
 @media (max-width: 768px) {
-  .patient-list-container {
-    padding: 1rem;
+  .modern-table thead th,
+  .modern-table tbody td {
+    padding: 8px 6px;
+    font-size: 0.85rem;
   }
 
   .patient-list-title {
-    font-size: 20px;
+    font-size: 1.4rem;
   }
+}
+.filter-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  align-items: flex-end;
+}
 
-  .patient-item {
-    padding: 12px;
-  }
+.filter-controls {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
 
-  .patient-name {
-    font-size: 18px;
-  }
+.input-group {
+  display: flex;
+  flex-direction: column;
+}
 
-  .patient-age, .patient-condition {
-    font-size: 14px;
-  }
+.input-group label {
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #000;
+}
+
+.input-group input,
+.input-group select {
+  padding: 0.4rem 0.6rem;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  font-size: 0.9rem;
 }

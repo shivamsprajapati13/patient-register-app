@@ -26,7 +26,6 @@ function PatientList({ patients }) {
 
   return (
     <div className="patient-list-container">
-      <h2 className="patient-list-title">Patient List</h2>
 
      
       <p className="patient-count">Total Patients: {patients.length}</p>
@@ -45,9 +44,9 @@ function PatientList({ patients }) {
           </tr>
         </thead>
         <tbody>
-          {patients.map((p) => (
+          {patients.map((p,index) => (
             <tr key={p.id}>
-              <td>{p.id}</td>
+              <td>{index+1}</td>
               <td>{p.first_name}</td>
               <td>{calculateAge(p.dob)}</td>
               <td>{p.email}</td>

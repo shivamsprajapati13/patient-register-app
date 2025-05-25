@@ -11,15 +11,24 @@ function App() {
   const [patients, setPatients] = useState([]);
   const [filteredPatients, setFilteredPatients] = useState([]);
   const [loading, setLoading] = useState(true);
-  const patientsRef = useRef(patients); 
+  const [updateKey, setUpdateKey] = useState(Date.now());  // To force re-render
+  const patientsRef = useRef([]);
 
   const fetchPatients = useCallback(async () => {
     try {
       const data = await getAllPatients();
-      setPatients(data);
-      setFilteredPatients(data);
-      patientsRef.current = data; 
-      console.log('Patient list updated');
+
+      // Deep clone to ensure React detects change
+      const clonedData = JSON.parse(JSON.stringify(data));
+
+      setPatients(clonedData);
+      setFilteredPatients(clonedData);
+      patientsRef.current = clonedData;
+
+      // Update key to force remount PatientList component
+      setUpdateKey(Date.now());
+
+      console.log('Patient list updated', clonedData);
     } catch (error) {
       console.error('Error fetching patients:', error);
     }
@@ -34,26 +43,29 @@ function App() {
 
     init();
 
-    const channel = new BroadcastChannel('patients-updates');
-
-    channel.onmessage = async (event) => {
-      if (event.data?.type === 'patient-added') {
-        console.log('Received broadcast: patient-added');
-        await fetchPatients(); // Update local state
-        channel.postMessage({ type: 'patients-updated', patients: patientsRef.current });
-      }
-    };
-
-    return () => {
-      channel.close();
-    };
+   
   }, [fetchPatients]);
 
+
+ const channel = new BroadcastChannel('patients-updates');
+    channel.onmessage = async (event) => {
+  if (event.data?.type === 'patient-added') {
+    // alert("helo");
+     console.log('↪ Broadcast received in another tab:');
+    // Wait a bit before fetching to allow IndexedDB to sync
+    await  fetchPatients();
+    console.log("here.................");
+  }
+};
+
   const handleAddPatient = async (patient) => {
-    await addPatient(patient); 
-    await fetchPatients();     
+    await addPatient(patient);
+    await fetchPatients();
+
     const channel = new BroadcastChannel('patients-updates');
-    channel.postMessage({ type: 'patients-updated', patients: patientsRef.current });
+    channel.postMessage({ type: 'patient-added' });
+    channel.close();
+    console.log('✅ Broadcast sent to other tabs.');
   };
 
   const handleSearch = async (term) => {
@@ -74,9 +86,8 @@ function App() {
             path="/"
             element={
               <>
-                <PatientForm onAdd={handleAddPatient} />
-                <h2>Patient List</h2>
-                {loading ? <Loader /> : <PatientList patients={filteredPatients} />}
+              <PatientForm patientCount={patients.length} onAdd={handleAddPatient} />
+                
               </>
             }
           />
@@ -85,7 +96,7 @@ function App() {
             element={
               <>
                 <SearchForm onSearch={handleSearch} />
-                <h2>Patients List</h2>
+           
                 {loading ? <Loader /> : <PatientList patients={filteredPatients} />}
               </>
             }

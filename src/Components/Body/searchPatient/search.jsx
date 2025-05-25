@@ -6,21 +6,22 @@ function SearchForm({ onSearch }) {
   const handleSearchChange = (e) => {
     const { value } = e.target;
     setSearchTerm(value);
-    onSearch(value); 
+    onSearch(value);
   };
 
   return (
-        <form >
-                <div className="input-group">
-      <label>Search by Disease:</label>
-      <input
-        type="text"
-        value={searchTerm}
-        onChange={handleSearchChange}
-        placeholder="Enter disease name"
-      />
-    </div>
-    </form>
+<form className="search-form" style={{ marginTop: '10px' }}>
+  <div className="input-group">
+    <input
+      id="search"
+      type="text"
+      value={searchTerm}
+      onChange={handleSearchChange}
+      placeholder="Search"
+    />
+  </div>
+</form>
+
   );
 }
 
