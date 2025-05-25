@@ -85,10 +85,9 @@ function App() {
           <Route
             path="/"
             element={
-              <>
+              
               <PatientForm patientCount={patients.length} onAdd={handleAddPatient} />
                 
-              </>
             }
           />
           <Route
