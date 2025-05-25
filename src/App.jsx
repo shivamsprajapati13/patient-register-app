@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PatientForm from './Components/Body/register/registerPatient';
 import SearchForm from './Components/Body/searchPatient/search';
-import { initDb, addPatient, getAllPatients, searchPatient } from './model/connection';
+import { initDb, addPatient, getAllPatients, searchPatient,deletePatient } from './model/connection';
 import PatientList from './Components/Body/showPatientList/showPatientList';
 import Navbar from './Components/Navbar/navbar';
 import Loader from './Components/Loader/loader';
@@ -52,16 +52,43 @@ const fetchPatients = useCallback(async (newPatient = null) => {
 useEffect(() => {
   const channel = new BroadcastChannel('patients-updates');
   channel.onmessage = async (event) => {
-    const { type, sender, patient } = event.data || {};
-    if (sender !== TAB_ID && type === 'patient-added') {
-      console.log('📨 Update received from another tab.');
-      await fetchPatients(patient); // Inject the received patient
+    const { type, sender, patient, id } = event.data || {};
+    if (sender === TAB_ID) return; // Skip self
+
+    if (type === 'patient-added') {
+      await fetchPatients(patient); // Already works ✅
+    }
+
+    if (type === 'patient-deleted') {
+      console.log('📨 Deletion received from another tab.');
+      const updatedList = patientsRef.current.filter(p => p.id !== id);
+      patientsRef.current = updatedList;
+      setPatients(updatedList);
+      setFilteredPatients(updatedList);
+      setUpdateKey(Date.now());
     }
   };
-  return () => {
-    channel.close();
-  };
+
+  return () => channel.close();
 }, [fetchPatients, TAB_ID]);
+
+
+
+const handleDeletePatient = async (patientId) => {
+  await deletePatient(patientId);
+
+  // Update local tab immediately
+  const updatedList = patientsRef.current.filter(p => p.id !== patientId);
+  patientsRef.current = updatedList;
+  setPatients(updatedList);
+  setFilteredPatients(updatedList);
+  setUpdateKey(Date.now());
+
+  // Notify other tabs
+  const channel = new BroadcastChannel('patients-updates');
+  channel.postMessage({ type: 'patient-deleted', sender: TAB_ID, id: patientId });
+  channel.close();
+};
 
 
 const handleAddPatient = async (patient) => {
@@ -100,7 +127,12 @@ const handleAddPatient = async (patient) => {
             element={
               <>
                 <SearchForm onSearch={handleSearch} />
-                {loading ? <Loader /> : <PatientList key={updateKey} patients={filteredPatients} />}
+                {loading ? <Loader /> : <PatientList
+  key={updateKey}
+  patients={filteredPatients}
+
+  onDelete={handleDeletePatient}
+/>}
               </>
             }
           />

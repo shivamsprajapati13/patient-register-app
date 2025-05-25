@@ -67,3 +67,9 @@ export async function searchPatient(term) {
   );
   return result.rows;
 }
+
+export async function deletePatient(id) {
+  const db = await initDb(); // or however you get your pg instance
+  await db.exec(`DELETE FROM patients WHERE id = ${id}`);
+}
+
